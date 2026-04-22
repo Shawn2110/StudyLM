@@ -1,0 +1,6 @@
+dist
+node_modules
+src-tauri/target
+src/types/bindings.ts
+src/routeTree.gen.ts
+pnpm-lock.yaml
