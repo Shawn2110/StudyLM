@@ -3,6 +3,7 @@
 //! Commands call these functions; SQL never appears outside this module.
 
 pub mod models;
+pub mod notebooks;
 
 use std::path::Path;
 
