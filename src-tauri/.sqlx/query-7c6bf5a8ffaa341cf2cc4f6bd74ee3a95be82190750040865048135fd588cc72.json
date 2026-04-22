@@ -1,0 +1,68 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id              as \"id!: String\",\n                  title           as \"title!: String\",\n                  created_at      as \"created_at!: i64\",\n                  exam_type       as \"exam_type!: ExamType\",\n                  format          as \"format!: Format\",\n                  subject,\n                  duration_minutes,\n                  exam_at,\n                  difficulty_focus as \"difficulty_focus: DifficultyFocus\"\n           FROM notebook\n           ORDER BY created_at DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!: String",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "title!: String",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!: i64",
+        "ordinal": 2,
+        "type_info": "Integer"
+      },
+      {
+        "name": "exam_type!: ExamType",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "format!: Format",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "subject",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "duration_minutes",
+        "ordinal": 6,
+        "type_info": "Integer"
+      },
+      {
+        "name": "exam_at",
+        "ordinal": 7,
+        "type_info": "Integer"
+      },
+      {
+        "name": "difficulty_focus: DifficultyFocus",
+        "ordinal": 8,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "7c6bf5a8ffaa341cf2cc4f6bd74ee3a95be82190750040865048135fd588cc72"
+}
