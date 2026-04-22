@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO notebook\n           (id, title, created_at, exam_type, format, subject,\n            duration_minutes, exam_at, difficulty_focus)\n           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 9
+    },
+    "nullable": []
+  },
+  "hash": "a02cc697017f85ab5674373d473659154ad34cc970ce41198cfe76d42780a1da"
+}
