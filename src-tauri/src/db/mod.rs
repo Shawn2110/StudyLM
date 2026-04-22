@@ -2,6 +2,8 @@
 //! and exposes typed query functions (`create_notebook`, `list_chunks`, …).
 //! Commands call these functions; SQL never appears outside this module.
 
+pub mod models;
+
 use std::path::Path;
 
 use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
