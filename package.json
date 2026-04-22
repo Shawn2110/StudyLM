@@ -4,10 +4,16 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "types": "cd src-tauri && cargo run --bin generate-bindings --quiet",
+    "predev": "pnpm run types",
+    "prebuild": "pnpm run types",
+    "pretypecheck": "pnpm run types",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "typecheck": "tsc --noEmit",
+    "routes:gen": "tsr generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
