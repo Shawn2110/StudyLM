@@ -7,12 +7,56 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Base layer — applies to bare HTML elements before any component overrides.
+ * Most opinions live in docs/design.md §3 and §9; this file just connects the
+ * CSS to the design tokens.
+ */
+
 @layer base {
-  * {
+  *,
+  *::before,
+  *::after {
     @apply border-border;
   }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Always-visible focus ring per design.md §9. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Tabular figures inside Geist Mono — keeps page numbers and counters
+     from jittering when they tick. */
+  code,
+  kbd,
+  samp,
+  pre,
+  .font-mono {
+    font-feature-settings: "tnum" 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
