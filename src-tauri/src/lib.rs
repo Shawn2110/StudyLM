@@ -13,6 +13,16 @@ pub mod retrieval;
 use tauri::Manager;
 use tracing_subscriber::EnvFilter;
 
+/// Single source of truth for the command surface. Both the runtime
+/// (`run()`) and the bindings generator (`bin/generate-bindings.rs`) call
+/// this so the TS types and the actual handlers can never drift.
+pub fn commands_builder() -> tauri_specta::Builder<tauri::Wry> {
+    tauri_specta::Builder::<tauri::Wry>::new().commands(tauri_specta::collect_commands![
+        commands::notebook::create_notebook,
+        commands::notebook::list_notebooks,
+    ])
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tracing_subscriber::fmt()
@@ -21,8 +31,12 @@ pub fn run() {
         )
         .init();
 
+    let builder = commands_builder();
+
     tauri::Builder::default()
-        .setup(|app| {
+        .invoke_handler(builder.invoke_handler())
+        .setup(move |app| {
+            builder.mount_events(app);
             let app_data_dir = app.path().app_data_dir()?;
             let db_path = app_data_dir.join("studylm.db");
             let pool = tauri::async_runtime::block_on(db::init_pool(&db_path))?;
