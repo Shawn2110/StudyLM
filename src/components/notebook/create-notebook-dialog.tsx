@@ -1,4 +1,4 @@
-import { useEffect, useState, type KeyboardEvent } from "react";
+import { useState, type KeyboardEvent } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -385,9 +385,3 @@ function ToggleUnit({
   );
 }
 
-// Reset live-preview state on dialog close so reopening starts fresh.
-export function useResetOnClose(open: boolean, reset: () => void) {
-  useEffect(() => {
-    if (!open) reset();
-  }, [open, reset]);
-}
