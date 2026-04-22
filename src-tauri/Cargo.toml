@@ -3,6 +3,7 @@ name = "studylm"
 version = "0.1.0"
 description = "StudyLM — local-first, BYOK study companion"
 edition = "2021"
+default-run = "studylm"
 
 [lib]
 name = "studylm_lib"
