@@ -18,7 +18,8 @@
     "lint": "eslint .",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
-    "routes:gen": "tsr generate"
+    "routes:gen": "tsr generate",
+    "test": "echo 'no tests yet — add vitest in Phase 1'"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
