@@ -20,6 +20,7 @@ pub fn commands_builder() -> tauri_specta::Builder<tauri::Wry> {
     tauri_specta::Builder::<tauri::Wry>::new().commands(tauri_specta::collect_commands![
         commands::notebook::create_notebook,
         commands::notebook::list_notebooks,
+        commands::document::list_documents,
     ])
 }
 
