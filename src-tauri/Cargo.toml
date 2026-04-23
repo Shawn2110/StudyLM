@@ -29,6 +29,7 @@ specta-typescript = "0.0.11"
 tauri-specta = { version = "=2.0.0-rc.24", features = ["derive", "typescript"] }
 sqlite-vec = "=0.1.9"
 libsqlite3-sys = "0.30"
+lopdf = "0.40.0"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 keyring = { version = "3.6.3", features = ["sync-secret-service", "crypto-rust"] }
