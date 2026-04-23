@@ -7,6 +7,12 @@ export const commands = {
 	createNotebook: (prepMode: PrepMode) => typedError<Notebook, AppError>(__TAURI_INVOKE("create_notebook", { prepMode })),
 	listNotebooks: () => typedError<Notebook[], AppError>(__TAURI_INVOKE("list_notebooks")),
 	listDocuments: (notebookId: string) => typedError<Document[], AppError>(__TAURI_INVOKE("list_documents", { notebookId })),
+	/**
+	 *  Kick off ingestion for `path` into `notebook_id`. Returns the new document
+	 *  id immediately; the frontend listens on `document-status` events for
+	 *  progress and terminal state.
+	 */
+	ingestDocument: (notebookId: string, path: string) => typedError<string, AppError>(__TAURI_INVOKE("ingest_document", { notebookId, path })),
 };
 
 /* Types */
