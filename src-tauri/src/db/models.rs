@@ -79,3 +79,46 @@ pub struct Notebook {
     pub exam_at: Option<i64>,
     pub difficulty_focus: Option<DifficultyFocus>,
 }
+
+/// Where a document originally came from. MVP ships `pdf`; the other variants
+/// are reserved for Phase 1 / P2 follow-ups (URL import, markdown paste, raw
+/// text drop).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Type, sqlx::Type)]
+#[serde(rename_all = "snake_case")]
+#[sqlx(rename_all = "snake_case")]
+pub enum SourceType {
+    Pdf,
+    Url,
+    Md,
+    Text,
+}
+
+/// Lifecycle of a document inside the ingestion pipeline. Rendered verbatim
+/// in the UI as a parse-state badge (see docs/design.md §6.3).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Type, sqlx::Type)]
+#[serde(rename_all = "snake_case")]
+#[sqlx(rename_all = "snake_case")]
+pub enum DocumentStatus {
+    Pending,
+    Parsing,
+    Embedding,
+    Ready,
+    Failed,
+}
+
+/// A single source attached to a notebook (PDF, URL, markdown, raw text).
+/// `local_path` is always populated — even URL/text sources materialise a
+/// file under the app-managed folder so downstream parsing is uniform.
+#[derive(Debug, Clone, Serialize, Deserialize, Type, FromRow)]
+pub struct Document {
+    pub id: String,
+    pub notebook_id: String,
+    pub filename: String,
+    pub source_type: SourceType,
+    pub source_url: Option<String>,
+    pub local_path: String,
+    pub page_count: Option<i64>,
+    pub status: DocumentStatus,
+    pub error: Option<String>,
+    pub created_at: i64,
+}
