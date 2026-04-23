@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE document SET page_count = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "c33cd4a13e0164eedf39f0f65521285cb2cb9027b1dd9af2c38fe109b1033611"
+}

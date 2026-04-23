@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO document\n           (id, notebook_id, filename, source_type, local_path, status, created_at)\n           VALUES (?, ?, ?, ?, ?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 7
+    },
+    "nullable": []
+  },
+  "hash": "cde1d362c76a7897f76fa95bc70b29b406c91a427c73c05ff89ae78d3f2ba346"
+}
