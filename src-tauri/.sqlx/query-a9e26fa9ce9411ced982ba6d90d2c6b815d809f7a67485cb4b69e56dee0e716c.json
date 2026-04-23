@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id                as \"id!: String\",\n                  notebook_id       as \"notebook_id!: String\",\n                  filename          as \"filename!: String\",\n                  source_type       as \"source_type!: SourceType\",\n                  source_url,\n                  local_path        as \"local_path!: String\",\n                  page_count,\n                  status            as \"status!: DocumentStatus\",\n                  error,\n                  created_at        as \"created_at!: i64\"\n           FROM document\n           WHERE notebook_id = ?\n           ORDER BY created_at DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!: String",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "notebook_id!: String",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "filename!: String",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "source_type!: SourceType",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "source_url",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "local_path!: String",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "page_count",
+        "ordinal": 6,
+        "type_info": "Integer"
+      },
+      {
+        "name": "status!: DocumentStatus",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "error",
+        "ordinal": 8,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!: i64",
+        "ordinal": 9,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "a9e26fa9ce9411ced982ba6d90d2c6b815d809f7a67485cb4b69e56dee0e716c"
+}
