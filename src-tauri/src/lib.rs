@@ -21,6 +21,7 @@ pub fn commands_builder() -> tauri_specta::Builder<tauri::Wry> {
         commands::notebook::create_notebook,
         commands::notebook::list_notebooks,
         commands::document::list_documents,
+        commands::document::ingest_document,
     ])
 }
 
@@ -42,6 +43,7 @@ pub fn run() {
             let db_path = app_data_dir.join("studylm.db");
             let pool = tauri::async_runtime::block_on(db::init_pool(&db_path))?;
             app.manage(pool);
+            app.manage(embeddings::new_slot());
             Ok(())
         })
         .run(tauri::generate_context!())
