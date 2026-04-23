@@ -5,6 +5,8 @@
 
 pub mod chunk;
 pub mod pdf;
+pub mod pipeline;
 
 pub use chunk::{approximate_token_count, chunk_document, Chunk, ChunkOpts};
 pub use pdf::{parse_pdf, PageText};
+pub use pipeline::{ingest_pdf, EVENT_DOCUMENT_STATUS};
