@@ -6,7 +6,7 @@
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sqlx::SqlitePool;
 use tauri::{AppHandle, Emitter, Manager};
 use tokio::task::spawn_blocking;
@@ -23,7 +23,7 @@ const EMBED_BATCH: usize = 32;
 /// Event name React subscribes to via `listen("document-status", …)`.
 pub const EVENT_DOCUMENT_STATUS: &str = "document-status";
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Serialize, Deserialize, specta::Type)]
 pub struct DocumentStatusPayload {
     pub document_id: String,
     pub status: DocumentStatus,
