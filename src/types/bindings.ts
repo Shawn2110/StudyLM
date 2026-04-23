@@ -6,6 +6,7 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 export const commands = {
 	createNotebook: (prepMode: PrepMode) => typedError<Notebook, AppError>(__TAURI_INVOKE("create_notebook", { prepMode })),
 	listNotebooks: () => typedError<Notebook[], AppError>(__TAURI_INVOKE("list_notebooks")),
+	listDocuments: (notebookId: string) => typedError<Document[], AppError>(__TAURI_INVOKE("list_documents", { notebookId })),
 };
 
 /* Types */
@@ -13,6 +14,30 @@ export type AppError = { kind: "Db"; message: string } | { kind: "Keychain"; mes
 
 // Emphasis for flashcards, guide tone, and worked-example selection.
 export type DifficultyFocus = "conceptual" | "problem_solving" | "memorization" | "mixed";
+
+/**
+ *  A single source attached to a notebook (PDF, URL, markdown, raw text).
+ *  `local_path` is always populated — even URL/text sources materialise a
+ *  file under the app-managed folder so downstream parsing is uniform.
+ */
+export type Document = {
+	id: string,
+	notebook_id: string,
+	filename: string,
+	source_type: SourceType,
+	source_url: string | null,
+	local_path: string,
+	page_count: number | null,
+	status: DocumentStatus,
+	error: string | null,
+	created_at: number,
+};
+
+/**
+ *  Lifecycle of a document inside the ingestion pipeline. Rendered verbatim
+ *  in the UI as a parse-state badge (see docs/design.md §6.3).
+ */
+export type DocumentStatus = "pending" | "parsing" | "embedding" | "ready" | "failed";
 
 /**
  *  Which exam the notebook is preparing for. Drives prompt selection across
@@ -58,6 +83,13 @@ export type PrepMode = {
 	// Tone and emphasis of generated output.
 	difficulty_focus: DifficultyFocus | null,
 };
+
+/**
+ *  Where a document originally came from. MVP ships `pdf`; the other variants
+ *  are reserved for Phase 1 / P2 follow-ups (URL import, markdown paste, raw
+ *  text drop).
+ */
+export type SourceType = "pdf" | "url" | "md" | "text";
 
 /* Tauri Specta runtime */
 async function typedError<T, E>(result: Promise<T>): Promise<{ status: "ok"; data: T } | { status: "error"; error: E }> {
