@@ -1,4 +1,10 @@
-import { commands, type AppError, type Notebook, type PrepMode } from "@/types/bindings";
+import {
+  commands,
+  type AppError,
+  type Document,
+  type Notebook,
+  type PrepMode,
+} from "@/types/bindings";
 
 type Result<T, E> = { status: "ok"; data: T } | { status: "error"; error: E };
 
@@ -16,4 +22,15 @@ export async function listNotebooks(): Promise<Notebook[]> {
 
 export async function createNotebook(prepMode: PrepMode): Promise<Notebook> {
   return unwrap(commands.createNotebook(prepMode));
+}
+
+export async function listDocuments(notebookId: string): Promise<Document[]> {
+  return unwrap(commands.listDocuments(notebookId));
+}
+
+export async function ingestDocument(
+  notebookId: string,
+  path: string,
+): Promise<string> {
+  return unwrap(commands.ingestDocument(notebookId, path));
 }
