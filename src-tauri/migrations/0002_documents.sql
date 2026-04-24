@@ -1,6 +1,7 @@
--- Documents, chunks, FTS5 mirror, and vec0 vector index.
--- Per docs/architecture.md §4. The vec0 table requires the sqlite-vec
--- extension to be loaded (registered as an auto-extension in db::init_pool).
+-- Documents, chunks, and FTS5 mirror. The vec0 (sqlite-vec) virtual table is
+-- created at runtime in db::init_pool because sqlx-cli's SQLite binary does
+-- not have the sqlite-vec extension auto-loaded — only our app's binary does.
+-- See docs/architecture.md §4.
 
 CREATE TABLE document (
   id          TEXT PRIMARY KEY,
@@ -48,9 +49,3 @@ CREATE TRIGGER chunk_au AFTER UPDATE ON chunk BEGIN
   INSERT INTO chunk_fts(chunk_fts, rowid, text) VALUES('delete', old.id, old.text);
   INSERT INTO chunk_fts(rowid, text) VALUES (new.id, new.text);
 END;
-
--- Dense vector index. nomic-embed-text-v1.5 emits 768-d float32 vectors.
-CREATE VIRTUAL TABLE chunk_vec USING vec0(
-  chunk_id INTEGER PRIMARY KEY,
-  embedding float[768]
-);
