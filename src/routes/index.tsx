@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { CreateNotebookDialog } from "@/components/notebook/create-notebook-dialog";
@@ -77,9 +77,10 @@ function NotebookRow({ notebook }: { notebook: Notebook }) {
 
   return (
     <li className="border-b border-paper-300">
-      <button
-        type="button"
-        className="block w-full cursor-pointer px-1 py-5 text-left transition-colors duration-instant ease-enter hover:bg-paper-100"
+      <Link
+        to="/notebooks/$notebookId"
+        params={{ notebookId: notebook.id }}
+        className="block cursor-pointer px-1 py-5 text-left transition-colors duration-instant ease-enter hover:bg-paper-100"
       >
         <Eyebrow className="font-mono normal-case tracking-[0.08em]">
           {eyebrow}
@@ -88,7 +89,7 @@ function NotebookRow({ notebook }: { notebook: Notebook }) {
           {notebook.title}
         </h2>
         <p className="mt-1 font-mono text-xs text-paper-500">{meta}</p>
-      </button>
+      </Link>
     </li>
   );
 }
