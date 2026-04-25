@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Eyebrow } from "@/components/ui/eyebrow";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/settings")({
@@ -9,10 +8,9 @@ export const Route = createFileRoute("/settings")({
 });
 
 /*
- * Settings — docs/design.md §8.8.
+ * Settings — docs/design.md §4.2.
  * Two-column nav-rail + content. Sections beyond "About" are stubs until
- * the relevant phase ships (Providers in Phase 1, Shortcuts when the
- * command palette lands, etc.).
+ * the relevant phase ships (Providers in Phase 1, etc.).
  */
 const SECTIONS = [
   { id: "system", label: "System" },
@@ -28,9 +26,11 @@ function SettingsPage() {
   const [active, setActive] = useState<SectionId>("about");
 
   return (
-    <section className="mx-auto grid max-w-5xl grid-cols-[180px_1fr] gap-12 px-4 pb-24 pt-12">
+    <section className="grid h-full grid-cols-[200px_1fr] gap-12 px-8 py-8">
       <aside>
-        <Eyebrow className="mb-4 block">Settings</Eyebrow>
+        <p className="mb-3 px-3 text-sm font-medium text-muted-foreground">
+          Settings
+        </p>
         <nav className="flex flex-col gap-px">
           {SECTIONS.map((s) => (
             <button
@@ -38,10 +38,10 @@ function SettingsPage() {
               type="button"
               onClick={() => setActive(s.id)}
               className={cn(
-                "rounded px-2 py-1.5 text-left text-sm font-sans transition-colors duration-instant ease-enter",
+                "rounded-md px-3 py-1.5 text-left text-sm font-sans transition-colors duration-instant ease-enter",
                 s.id === active
-                  ? "bg-paper-200 text-paper-900"
-                  : "text-paper-500 hover:bg-paper-100 hover:text-paper-900",
+                  ? "bg-accent-soft text-text-strong"
+                  : "text-muted-foreground hover:bg-surface-alt hover:text-text-strong",
               )}
             >
               {s.label}
@@ -68,20 +68,22 @@ function SettingsPage() {
 function AboutSection() {
   return (
     <article className="space-y-4">
-      <h1 className="font-serif text-[1.75rem] font-medium leading-tight tracking-[-0.015em] text-paper-900">
+      <h1 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-text-strong">
         StudyLM
       </h1>
-      <p className="max-w-prose text-sm font-sans leading-relaxed text-paper-700">
+      <p className="max-w-prose text-sm leading-relaxed text-text">
         A local-first, BYOK study companion. Documents stay on your machine;
         you pick the LLM.
       </p>
-      <dl className="grid grid-cols-[120px_1fr] gap-y-1 font-mono text-xs text-paper-500">
-        <dt>Version</dt>
-        <dd>0.1.0 — Phase 0</dd>
-        <dt>License</dt>
-        <dd>MIT (or Apache-2.0; not yet decided)</dd>
-        <dt>Source</dt>
-        <dd>github.com/Shawn2110/StudyLM</dd>
+      <dl className="grid grid-cols-[120px_1fr] gap-y-2 text-sm">
+        <dt className="text-muted-foreground">Version</dt>
+        <dd className="font-mono text-text-strong">0.1.0 — Phase 0+2</dd>
+        <dt className="text-muted-foreground">License</dt>
+        <dd className="text-text-strong">MIT (or Apache-2.0; not yet decided)</dd>
+        <dt className="text-muted-foreground">Source</dt>
+        <dd className="font-mono text-text-strong">
+          github.com/Shawn2110/StudyLM
+        </dd>
       </dl>
     </article>
   );
@@ -90,11 +92,11 @@ function AboutSection() {
 function Stub({ label, phase }: { label: string; phase: string }) {
   return (
     <article className="space-y-3">
-      <h1 className="font-serif text-[1.75rem] font-medium leading-tight tracking-[-0.015em] text-paper-900">
+      <h1 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-text-strong">
         {label}
       </h1>
-      <p className="text-sm font-sans text-paper-500">
-        Lands in <span className="font-mono text-paper-700">{phase}</span>.
+      <p className="text-sm text-muted-foreground">
+        Lands in <span className="font-mono text-text">{phase}</span>.
       </p>
     </article>
   );
