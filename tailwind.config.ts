@@ -3,10 +3,9 @@ import tailwindcssAnimate from "tailwindcss-animate";
 
 /*
  * Tailwind theme — reads design tokens from src/styles/tokens.css.
- * See docs/design.md §3 for the source of truth on colors/spacing/type.
- * Most shadcn semantic names (background, foreground, primary, …) are
- * preserved as aliases over the paper/ink palette so existing primitives
- * keep working.
+ * v2 (claude.ai-inspired): cream surfaces, coral accent, soft radii (6/12/16),
+ * subtle shadows, single Geist font family. Legacy paper/ink class names
+ * still work via CSS variable aliases declared in tokens.css.
  */
 
 const config: Config = {
@@ -19,19 +18,53 @@ const config: Config = {
       screens: { "2xl": "1400px" },
     },
     fontFamily: {
-      sans: ["var(--font-ui)", "system-ui", "sans-serif"],
-      serif: ["var(--font-display)", "serif"],
+      sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+      serif: ["var(--font-sans)", "system-ui", "sans-serif"], // Fraunces dropped — alias to sans
       mono: ["var(--font-mono)", "ui-monospace", "monospace"],
     },
     borderRadius: {
       none: "var(--radius-none)",
       sm: "var(--radius-sm)",
       DEFAULT: "var(--radius-sm)",
+      md: "var(--radius-sm)",
       lg: "var(--radius-lg)",
+      xl: "var(--radius-xl)",
+      "2xl": "var(--radius-xl)",
       full: "var(--radius-pill)",
+    },
+    boxShadow: {
+      none: "none",
+      sm: "var(--shadow-sm)",
+      DEFAULT: "var(--shadow-md)",
+      md: "var(--shadow-md)",
+      lg: "var(--shadow-lg)",
     },
     extend: {
       colors: {
+        /* Canonical v2 names */
+        bg: "var(--bg)",
+        surface: "var(--surface)",
+        "surface-alt": "var(--surface-alt)",
+        "border-default": "var(--border)",
+        "border-strong": "var(--border-strong)",
+        muted: { DEFAULT: "var(--surface-alt)", foreground: "var(--muted)" },
+        text: "var(--text)",
+        "text-strong": "var(--text-strong)",
+        accent: {
+          DEFAULT: "var(--accent)",
+          hover: "var(--accent-hover)",
+          active: "var(--accent-active)",
+          soft: "var(--accent-soft)",
+          on: "var(--accent-on)",
+          foreground: "var(--accent-on)",
+        },
+
+        /* Semantic */
+        success: "var(--success-500)",
+        warning: "var(--warning-500)",
+        danger: "var(--danger-500)",
+
+        /* Legacy paper/ink — keep so existing components keep rendering. */
         paper: {
           50: "var(--paper-50)",
           100: "var(--paper-100)",
@@ -48,49 +81,40 @@ const config: Config = {
           600: "var(--ink-600)",
           700: "var(--ink-700)",
         },
-        success: "var(--success-500)",
-        warning: "var(--warning-500)",
-        danger: "var(--danger-500)",
 
-        /* Semantic aliases over paper/ink so shadcn primitives keep working. */
-        background: "var(--paper-50)",
-        foreground: "var(--paper-700)",
-        border: "var(--paper-300)",
-        input: "var(--paper-300)",
+        /* Shadcn semantic aliases — re-pointed at v2 tokens. */
+        background: "var(--bg)",
+        foreground: "var(--text)",
+        border: "var(--border)",
+        input: "var(--border)",
         ring: "var(--focus)",
         primary: {
-          DEFAULT: "var(--ink-500)",
-          foreground: "var(--paper-50)",
+          DEFAULT: "var(--accent)",
+          foreground: "var(--accent-on)",
         },
         secondary: {
-          DEFAULT: "var(--paper-200)",
-          foreground: "var(--paper-900)",
+          DEFAULT: "var(--surface-alt)",
+          foreground: "var(--text)",
         },
         destructive: {
           DEFAULT: "var(--danger-500)",
-          foreground: "var(--paper-50)",
-        },
-        muted: {
-          DEFAULT: "var(--paper-100)",
-          foreground: "var(--paper-500)",
-        },
-        accent: {
-          DEFAULT: "var(--paper-200)",
-          foreground: "var(--paper-900)",
+          foreground: "var(--accent-on)",
         },
         popover: {
-          DEFAULT: "var(--paper-100)",
-          foreground: "var(--paper-700)",
+          DEFAULT: "var(--surface)",
+          foreground: "var(--text)",
         },
         card: {
-          DEFAULT: "var(--paper-100)",
-          foreground: "var(--paper-700)",
+          DEFAULT: "var(--surface)",
+          foreground: "var(--text)",
         },
       },
       spacing: {
         "reading-gutter": "var(--space-reading-gutter)",
         "panel-gutter": "var(--space-panel-gutter)",
         "card-gutter": "var(--space-card-gutter)",
+        sidebar: "var(--sidebar-width)",
+        topbar: "var(--topbar-height)",
       },
       transitionTimingFunction: {
         enter: "var(--ease-enter)",
