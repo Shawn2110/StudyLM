@@ -14,10 +14,10 @@ import type {
 } from "@/types/bindings";
 
 /*
- * Prep-mode pill, docs/design.md §7.1. Carries the exam_type, difficulty
- * focus, and time-remaining (when known). Renders at the top-left of every
- * generated artifact — chat transcript, study guide, flashcard set,
- * podcast — as the visual promise that the output is tailored.
+ * Prep-mode pill, docs/design.md §6.6 (v2). Renders at the top-left of
+ * every generated artifact (chat, study guide, flashcards, podcast) and on
+ * notebook headers — the visual promise that the output is tailored.
+ * v2 swap: accent-soft background + accent text (was bordered transparent).
  */
 
 type PrepModeBadgeProps = {
@@ -47,7 +47,7 @@ export function PrepModeBadge({
     <span
       title={pieces.length > 3 ? full : undefined}
       className={cn(
-        "inline-flex items-center rounded-full border border-ink-500 px-2 py-0.5 font-mono text-[11px] uppercase leading-none tracking-[0.08em] text-ink-600",
+        "inline-flex items-center rounded-full bg-accent-soft px-2 py-0.5 font-mono text-[11px] font-medium uppercase leading-none tracking-[0.04em] text-accent",
         className,
       )}
     >
