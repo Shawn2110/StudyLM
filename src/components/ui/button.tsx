@@ -5,31 +5,31 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /*
- * Per docs/design.md §6.1: rectangular (not pill), 4 px radius, 32 px tall,
- * UI font weight 500. Pills are reserved for semantic signals (status,
- * prep mode, citations).
+ * Per docs/design.md §6.1 (v2): 36 px tall, 6 px radius, Geist 500.
+ * Three variants — primary (coral), secondary (surface-alt), ghost.
+ * Pills are reserved for chips/badges and the active sidebar item.
  */
 const buttonVariants = cva(
-  "inline-flex h-8 items-center justify-center gap-2 whitespace-nowrap rounded text-sm font-medium font-sans transition-colors duration-instant ease-enter focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-[18px] [&_svg]:shrink-0",
+  "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md px-4 text-sm font-medium font-sans transition-all duration-instant ease-enter focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-[18px] [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         primary:
-          "bg-ink-500 text-paper-50 hover:bg-ink-600 active:bg-ink-700",
+          "bg-accent text-accent-on shadow-sm hover:bg-accent-hover active:bg-accent-active",
         secondary:
-          "bg-paper-200 text-paper-900 border border-paper-300 hover:bg-paper-300",
+          "bg-surface-alt text-text border border-border-default hover:border-border-strong",
         ghost:
-          "bg-transparent text-paper-700 hover:bg-paper-100",
+          "bg-transparent text-muted-foreground hover:bg-surface-alt hover:text-text",
         destructive:
-          "bg-paper-200 text-danger border border-paper-300 hover:bg-paper-300",
+          "bg-surface-alt text-danger border border-border-default hover:border-border-strong",
         link:
-          "text-ink-500 underline-offset-4 hover:underline hover:text-ink-600",
+          "text-accent underline-offset-4 hover:underline hover:text-accent-hover",
       },
       size: {
-        default: "px-3.5 py-2",
-        sm: "h-7 px-3 text-xs",
+        default: "h-9 px-4",
+        sm: "h-8 px-3 text-xs",
         lg: "h-10 px-5",
-        icon: "h-8 w-8 p-0",
+        icon: "h-9 w-9 p-0",
       },
     },
     defaultVariants: {
