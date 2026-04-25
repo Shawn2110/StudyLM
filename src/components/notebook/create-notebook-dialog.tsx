@@ -3,11 +3,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -21,7 +23,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Eyebrow } from "@/components/ui/eyebrow";
 import { PrepModeBadge } from "@/components/notebook/prep-mode-badge";
 import { cn } from "@/lib/utils";
 import { createNotebook } from "@/lib/commands";
@@ -33,11 +34,9 @@ import {
 import type { DifficultyFocus, ExamType, Format } from "@/types/bindings";
 
 /*
- * Prep-mode wizard, docs/design.md §7.5.
- * One modal, one tall form, all six fields visible. Eyebrow label left,
- * input right. exam_type + format use radio pills. Time-remaining is
- * hours-or-days toggle + number. Live preview pill on the right.
- * Submit on ⌘/Ctrl + Return.
+ * Prep-mode wizard, docs/design.md §4.3 (v2). 520 px modal, plain UI labels
+ * (no SMALL CAPS), radio pills for the enum fields, hours/days toggle for
+ * time-remaining, ⌘+Return to submit.
  */
 
 const examTypes = [
@@ -140,17 +139,23 @@ export function CreateNotebookDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>+ New notebook</Button>
+        <Button className="w-full justify-start">
+          <Plus className="h-4 w-4" />
+          New notebook
+        </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[560px]">
+      <DialogContent className="max-w-[520px]">
         <DialogHeader>
           <DialogTitle>New notebook</DialogTitle>
+          <DialogDescription>
+            Set the prep mode. You can change it later if you regenerate.
+          </DialogDescription>
           <PrepModeBadge
             examType={watched.exam_type}
             format={watched.format}
             difficultyFocus={watched.difficulty_focus}
             examAt={examAtFromForm}
-            className="self-start"
+            className="mt-2 self-start"
           />
         </DialogHeader>
 
@@ -164,14 +169,14 @@ export function CreateNotebookDialog() {
               control={form.control}
               name="exam_type"
               render={({ field }) => (
-                <WizardRow label="Exam type">
+                <Field label="Exam type">
                   <PillGroup
                     value={field.value}
                     options={examTypes}
                     label={formatExamType}
                     onChange={field.onChange}
                   />
-                </WizardRow>
+                </Field>
               )}
             />
 
@@ -179,14 +184,14 @@ export function CreateNotebookDialog() {
               control={form.control}
               name="format"
               render={({ field }) => (
-                <WizardRow label="Format">
+                <Field label="Format">
                   <PillGroup
                     value={field.value}
                     options={formats}
                     label={formatFormat}
                     onChange={field.onChange}
                   />
-                </WizardRow>
+                </Field>
               )}
             />
 
@@ -194,18 +199,18 @@ export function CreateNotebookDialog() {
               control={form.control}
               name="subject"
               render={({ field }) => (
-                <WizardRow label="Subject">
+                <Field label="Subject">
                   <FormItem className="space-y-1">
                     <FormControl>
                       <Input placeholder="Thermodynamics" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                </WizardRow>
+                </Field>
               )}
             />
 
-            <WizardRow label="Time remaining">
+            <Field label="Time remaining">
               <div className="flex gap-2">
                 <FormField
                   control={form.control}
@@ -235,13 +240,13 @@ export function CreateNotebookDialog() {
                   )}
                 />
               </div>
-            </WizardRow>
+            </Field>
 
             <FormField
               control={form.control}
               name="duration_minutes"
               render={({ field }) => (
-                <WizardRow label="Exam duration">
+                <Field label="Exam duration">
                   <FormItem className="space-y-1">
                     <FormControl>
                       <Input
@@ -253,7 +258,7 @@ export function CreateNotebookDialog() {
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                </WizardRow>
+                </Field>
               )}
             />
 
@@ -261,7 +266,7 @@ export function CreateNotebookDialog() {
               control={form.control}
               name="difficulty_focus"
               render={({ field }) => (
-                <WizardRow label="Focus">
+                <Field label="Focus">
                   <PillGroup
                     value={field.value ?? null}
                     options={difficultyFocuses}
@@ -269,18 +274,18 @@ export function CreateNotebookDialog() {
                     onChange={field.onChange}
                     allowEmpty
                   />
-                </WizardRow>
+                </Field>
               )}
             />
 
             {mutation.isError && (
-              <p className="text-sm font-sans text-danger">
+              <p className="text-sm text-danger">
                 {String((mutation.error as { message?: string })?.message ?? mutation.error)}
               </p>
             )}
 
             <DialogFooter className="!mt-6 items-center">
-              <p className="mr-auto font-mono text-xs text-paper-500">
+              <p className="mr-auto font-mono text-xs text-muted-foreground">
                 ⌘ + Return to create
               </p>
               <Button
@@ -301,7 +306,7 @@ export function CreateNotebookDialog() {
   );
 }
 
-function WizardRow({
+function Field({
   label,
   children,
 }: {
@@ -309,9 +314,9 @@ function WizardRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-[100px_1fr] items-start gap-4">
-      <Eyebrow className="pt-2">{label}</Eyebrow>
-      <div>{children}</div>
+    <div className="space-y-1.5">
+      <p className="text-sm font-medium text-text-strong">{label}</p>
+      {children}
     </div>
   );
 }
@@ -339,10 +344,10 @@ function PillGroup<T extends string>({
             type="button"
             onClick={() => onChange(allowEmpty && selected ? undefined : opt)}
             className={cn(
-              "rounded-full border px-3 py-1 text-xs font-sans transition-colors duration-instant ease-enter",
+              "rounded-full border px-3 py-1 text-xs font-medium transition-all duration-instant ease-enter",
               selected
-                ? "border-ink-500 bg-ink-500 text-paper-50"
-                : "border-paper-300 bg-paper-50 text-paper-700 hover:border-paper-400 hover:text-paper-900",
+                ? "border-accent bg-accent text-accent-on shadow-sm"
+                : "border-border-default bg-surface text-text hover:border-border-strong hover:text-text-strong",
             )}
           >
             {label(opt)}
@@ -362,7 +367,7 @@ function ToggleUnit({
 }) {
   const units: TimeUnit[] = ["hours", "days"];
   return (
-    <div className="inline-flex items-center rounded border border-paper-300 bg-paper-200 p-0.5">
+    <div className="inline-flex items-center rounded-md border border-border-default bg-surface-alt p-0.5">
       {units.map((u) => {
         const active = value === u;
         return (
@@ -371,10 +376,10 @@ function ToggleUnit({
             type="button"
             onClick={() => onChange(u)}
             className={cn(
-              "rounded-sm px-3 py-1 text-xs font-sans transition-colors duration-instant ease-enter",
+              "rounded-sm px-3 py-1 text-xs font-medium transition-all duration-instant ease-enter",
               active
-                ? "bg-paper-50 text-paper-900 shadow-[inset_0_0_0_1px_var(--paper-300)]"
-                : "text-paper-500 hover:text-paper-900",
+                ? "bg-surface text-text-strong shadow-sm"
+                : "text-muted-foreground hover:text-text-strong",
             )}
           >
             {u}
@@ -384,4 +389,3 @@ function ToggleUnit({
     </div>
   );
 }
-
