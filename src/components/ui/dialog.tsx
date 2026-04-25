@@ -5,10 +5,9 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /*
- * Per docs/design.md §6.5: 8 px radius, 1 px paper-300 border, paper-100
- * surface (no shadow — the one shadow exception is the command palette,
- * §3.4). Backdrop is paper-900/40 with 8 px blur. Title in Fraunces 500 at
- * H2 size; body in UI font.
+ * Per docs/design.md §6.5 (v2): 16 px radius, surface bg, hairline border,
+ * shadow-lg. Backdrop is solid translucent black (NO blur — backdrop blur
+ * is on the v2 anti-pattern list).
  */
 
 const Dialog = DialogPrimitive.Root;
@@ -23,7 +22,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-paper-900/40 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-black/30 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
     {...props}
@@ -40,13 +39,13 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border border-paper-300 bg-paper-100 p-6 duration-snappy ease-enter data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        "fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl border border-border-default bg-surface p-6 shadow-lg duration-snappy ease-enter data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         className,
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded text-paper-500 opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded text-muted-foreground opacity-80 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none">
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -59,7 +58,7 @@ const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-2", className)} {...props} />
+  <div className={cn("flex flex-col space-y-1.5", className)} {...props} />
 );
 DialogHeader.displayName = "DialogHeader";
 
@@ -84,7 +83,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "font-serif text-xl font-medium leading-tight tracking-tight text-paper-900",
+      "text-xl font-sans font-semibold leading-tight tracking-[-0.015em] text-text-strong",
       className,
     )}
     {...props}
@@ -98,7 +97,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm font-sans text-paper-500", className)}
+    className={cn("text-sm font-sans text-muted-foreground", className)}
     {...props}
   />
 ));
