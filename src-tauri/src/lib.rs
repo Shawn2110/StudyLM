@@ -22,6 +22,13 @@ pub fn commands_builder() -> tauri_specta::Builder<tauri::Wry> {
         commands::notebook::list_notebooks,
         commands::document::list_documents,
         commands::document::ingest_document,
+        commands::provider::list_providers,
+        commands::provider::validate_provider_key,
+        commands::provider::get_provider_status,
+        commands::provider::store_provider_key,
+        commands::provider::delete_provider_key,
+        commands::provider::set_active_provider,
+        commands::provider::get_active_provider,
     ])
 }
 
