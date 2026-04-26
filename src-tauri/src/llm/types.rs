@@ -2,6 +2,8 @@
 //! `commands/`, `db/`, and `llm/<provider>.rs` can all reference them
 //! without pulling in the trait surface.
 
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
@@ -48,6 +50,20 @@ impl ProviderId {
     /// providers reached without auth (Ollama on localhost).
     pub fn needs_api_key(self) -> bool {
         !matches!(self, ProviderId::Ollama)
+    }
+}
+
+impl FromStr for ProviderId {
+    type Err = ();
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "anthropic" => Ok(ProviderId::Anthropic),
+            "openai" => Ok(ProviderId::Openai),
+            "google" => Ok(ProviderId::Google),
+            "openrouter" => Ok(ProviderId::Openrouter),
+            "ollama" => Ok(ProviderId::Ollama),
+            _ => Err(()),
+        }
     }
 }
 
