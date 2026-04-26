@@ -4,6 +4,9 @@ import {
   type Document,
   type Notebook,
   type PrepMode,
+  type ProviderId,
+  type ProviderInfo,
+  type ProviderStatus,
 } from "@/types/bindings";
 
 type Result<T, E> = { status: "ok"; data: T } | { status: "error"; error: E };
@@ -33,4 +36,42 @@ export async function ingestDocument(
   path: string,
 ): Promise<string> {
   return unwrap(commands.ingestDocument(notebookId, path));
+}
+
+export async function listProviders(): Promise<ProviderInfo[]> {
+  return unwrap(commands.listProviders());
+}
+
+export async function validateProviderKey(
+  provider: ProviderId,
+  apiKey: string,
+): Promise<ProviderStatus> {
+  return unwrap(commands.validateProviderKey(provider, apiKey));
+}
+
+export async function getProviderStatus(
+  provider: ProviderId,
+): Promise<ProviderStatus> {
+  return unwrap(commands.getProviderStatus(provider));
+}
+
+export async function storeProviderKey(
+  provider: ProviderId,
+  apiKey: string,
+): Promise<void> {
+  await unwrap(commands.storeProviderKey(provider, apiKey));
+}
+
+export async function deleteProviderKey(provider: ProviderId): Promise<void> {
+  await unwrap(commands.deleteProviderKey(provider));
+}
+
+export async function setActiveProvider(
+  provider: ProviderId | null,
+): Promise<void> {
+  await unwrap(commands.setActiveProvider(provider));
+}
+
+export async function getActiveProvider(): Promise<ProviderId | null> {
+  return unwrap(commands.getActiveProvider());
 }
