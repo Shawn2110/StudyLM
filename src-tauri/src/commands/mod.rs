@@ -5,3 +5,4 @@
 
 pub mod document;
 pub mod notebook;
+pub mod provider;
