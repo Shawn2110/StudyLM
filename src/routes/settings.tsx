@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
+import { ProvidersPanel } from "@/components/settings/providers-panel";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/settings")({
@@ -53,7 +54,7 @@ function SettingsPage() {
       <div>
         {active === "about" && <AboutSection />}
         {active === "system" && <Stub label="System" phase="Phase 7" />}
-        {active === "providers" && <Stub label="Providers" phase="Phase 1" />}
+        {active === "providers" && <ProvidersPanel />}
         {active === "appearance" && (
           <Stub label="Appearance" phase="later — token toggle" />
         )}
