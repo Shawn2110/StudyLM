@@ -13,6 +13,23 @@ export const commands = {
 	 *  progress and terminal state.
 	 */
 	ingestDocument: (notebookId: string, path: string) => typedError<string, AppError>(__TAURI_INVOKE("ingest_document", { notebookId, path })),
+	listProviders: () => typedError<ProviderInfo[], AppError>(__TAURI_INVOKE("list_providers")),
+	/**
+	 *  Validate a candidate key against the live provider before persisting it.
+	 *  Returns the same status enum used everywhere else so the UI can render
+	 *  uniform feedback (Connected, InvalidKey, Unreachable, Error).
+	 */
+	validateProviderKey: (provider: ProviderId, apiKey: string) => typedError<ProviderStatus, AppError>(__TAURI_INVOKE("validate_provider_key", { provider, apiKey })),
+	/**
+	 *  Probe the provider with the key currently stored in the keychain.
+	 *  Returns `NotConfigured` when no key is stored (and the provider needs
+	 *  one); for Ollama it always pings since it has no key requirement.
+	 */
+	getProviderStatus: (provider: ProviderId) => typedError<ProviderStatus, AppError>(__TAURI_INVOKE("get_provider_status", { provider })),
+	storeProviderKey: (provider: ProviderId, apiKey: string) => typedError<null, AppError>(__TAURI_INVOKE("store_provider_key", { provider, apiKey })),
+	deleteProviderKey: (provider: ProviderId) => typedError<null, AppError>(__TAURI_INVOKE("delete_provider_key", { provider })),
+	setActiveProvider: (provider: "anthropic" | "openai" | "google" | "openrouter" | "ollama" | null) => typedError<null, AppError>(__TAURI_INVOKE("set_active_provider", { provider })),
+	getActiveProvider: () => typedError<"anthropic" | "openai" | "google" | "openrouter" | "ollama" | null, AppError>(__TAURI_INVOKE("get_active_provider")),
 };
 
 /* Types */
@@ -55,6 +72,17 @@ export type ExamType = "internal" | "midsem" | "endsem" | "viva" | "practical" |
 export type Format = "mcq" | "short" | "long" | "oral" | "numerical" | "mixed";
 
 /**
+ *  A single model exposed by a provider. `id` is the provider-native
+ *  identifier passed back into chat requests; `label` is the friendly name
+ *  for UI; `context_window` is in tokens when known.
+ */
+export type ModelInfo = {
+	id: string,
+	label: string,
+	context_window: number | null,
+};
+
+/**
  *  A persisted notebook row. `id` is a uuid v4 and `created_at` is unix
  *  epoch seconds.
  */
@@ -89,6 +117,49 @@ export type PrepMode = {
 	// Tone and emphasis of generated output.
 	difficulty_focus: DifficultyFocus | null,
 };
+
+/**
+ *  The five providers StudyLM can target. The serialized identifier is
+ *  snake_case, matching the rest of the IPC surface and the keychain keys.
+ */
+export type ProviderId = "anthropic" | "openai" | "google" | "openrouter" | "ollama";
+
+/**
+ *  Provider summary for the Settings → Providers list. Exists so the
+ *  frontend can render the picker without instantiating provider clients.
+ */
+export type ProviderInfo = {
+	id: ProviderId,
+	label: string,
+	needs_api_key: boolean,
+};
+
+/**
+ *  What `ping()` reports back to the UI. Status colors and copy in the
+ *  Settings → Providers screen are driven off this.
+ */
+export type ProviderStatus = 
+// No key configured (or for Ollama, the daemon was not probed yet).
+{ kind: "NotConfigured" } | 
+// Provider responded successfully to a low-cost ping.
+{ kind: "Connected"; detail: {
+	models: ModelInfo[],
+} } | 
+// Network reached the provider but it rejected our credentials.
+{ kind: "InvalidKey"; detail: {
+	message: string,
+} } | 
+/**
+ *  We could not reach the provider at all (network down, Ollama not
+ *  running, DNS failure, etc.).
+ */
+{ kind: "Unreachable"; detail: {
+	message: string,
+} } | 
+// Anything else that doesn't fit the above (5xx, malformed payload).
+{ kind: "Error"; detail: {
+	message: string,
+} };
 
 /**
  *  Where a document originally came from. MVP ships `pdf`; the other variants
