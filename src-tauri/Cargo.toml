@@ -37,7 +37,7 @@ tokenizers = "0.22"
 hf-hub = { version = "0.5", features = ["tokio"] }
 bytemuck = "1"
 tauri-plugin-dialog = "2.7.0"
-reqwest = { version = "0.13.2", features = ["json", "stream"] }
+reqwest = { version = "0.13.2", features = ["json", "stream", "query"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 keyring = { version = "3.6.3", features = ["sync-secret-service", "crypto-rust"] }
