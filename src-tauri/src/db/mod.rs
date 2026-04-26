@@ -6,6 +6,7 @@ pub mod chunks;
 pub mod documents;
 pub mod models;
 pub mod notebooks;
+pub mod settings;
 
 use std::path::Path;
 use std::sync::Once;
