@@ -1,4 +1,8 @@
 //! Prompt templates rendered with Tera. One submodule per feature (chat,
 //! guide, flashcards, podcast); prep-mode branches live inside the template
-//! using Tera conditionals so the same template handles viva, MCQ, long-answer,
-//! etc.
+//! using Tera conditionals so the same template handles viva, MCQ,
+//! long-answer, etc.
+
+pub mod chat;
+
+pub use chat::build_system_prompt as build_chat_system_prompt;
