@@ -43,6 +43,27 @@ pub async fn create(pool: &SqlitePool, prep_mode: &PrepMode) -> AppResult<Notebo
     })
 }
 
+/// Look up a single notebook by id.
+pub async fn get_by_id(pool: &SqlitePool, id: &str) -> AppResult<Notebook> {
+    let row = sqlx::query_as!(
+        Notebook,
+        r#"SELECT id              as "id!: String",
+                  title           as "title!: String",
+                  created_at      as "created_at!: i64",
+                  exam_type       as "exam_type!: ExamType",
+                  format          as "format!: Format",
+                  subject,
+                  duration_minutes,
+                  exam_at,
+                  difficulty_focus as "difficulty_focus: DifficultyFocus"
+           FROM notebook WHERE id = ?"#,
+        id,
+    )
+    .fetch_one(pool)
+    .await?;
+    Ok(row)
+}
+
 /// Return all notebooks, newest first.
 pub async fn list(pool: &SqlitePool) -> AppResult<Vec<Notebook>> {
     let rows = sqlx::query_as!(
