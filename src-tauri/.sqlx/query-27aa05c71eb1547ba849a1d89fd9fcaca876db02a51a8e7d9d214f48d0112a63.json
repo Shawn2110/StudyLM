@@ -1,0 +1,50 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id              as \"id!: String\",\n                  chat_id         as \"chat_id!: String\",\n                  role            as \"role!: MessageRole\",\n                  content         as \"content!: String\",\n                  citations_json,\n                  created_at      as \"created_at!: i64\"\n           FROM message\n           WHERE chat_id = ?\n           ORDER BY created_at ASC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!: String",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "chat_id!: String",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "role!: MessageRole",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "content!: String",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "citations_json",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!: i64",
+        "ordinal": 5,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "27aa05c71eb1547ba849a1d89fd9fcaca876db02a51a8e7d9d214f48d0112a63"
+}

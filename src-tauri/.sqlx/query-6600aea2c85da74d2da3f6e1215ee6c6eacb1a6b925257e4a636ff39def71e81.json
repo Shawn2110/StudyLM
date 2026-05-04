@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE chat\n           SET title = COALESCE(?, title),\n               model_id = ?,\n               provider = ?\n           WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "6600aea2c85da74d2da3f6e1215ee6c6eacb1a6b925257e4a636ff39def71e81"
+}

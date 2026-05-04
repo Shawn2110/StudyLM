@@ -2,8 +2,10 @@
 //! and exposes typed query functions (`create_notebook`, `list_chunks`, …).
 //! Commands call these functions; SQL never appears outside this module.
 
+pub mod chats;
 pub mod chunks;
 pub mod documents;
+pub mod messages;
 pub mod models;
 pub mod notebooks;
 pub mod settings;

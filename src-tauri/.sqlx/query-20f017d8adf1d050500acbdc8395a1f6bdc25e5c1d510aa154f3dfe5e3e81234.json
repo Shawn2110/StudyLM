@@ -1,0 +1,50 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id           as \"id!: String\",\n                  notebook_id  as \"notebook_id!: String\",\n                  title,\n                  model_id,\n                  provider,\n                  created_at   as \"created_at!: i64\"\n           FROM chat WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!: String",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "notebook_id!: String",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "title",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "model_id",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "provider",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!: i64",
+        "ordinal": 5,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "20f017d8adf1d050500acbdc8395a1f6bdc25e5c1d510aa154f3dfe5e3e81234"
+}
