@@ -122,3 +122,48 @@ pub struct Document {
     pub error: Option<String>,
     pub created_at: i64,
 }
+
+/// Author of a chat message.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Type, sqlx::Type)]
+#[serde(rename_all = "snake_case")]
+#[sqlx(rename_all = "snake_case")]
+pub enum MessageRole {
+    User,
+    Assistant,
+}
+
+/// A persisted chat session inside a notebook. `model_id` and `provider`
+/// snapshot which LLM was used for the first assistant reply — useful for
+/// later regeneration and for badge rendering on the message bubble.
+#[derive(Debug, Clone, Serialize, Deserialize, Type, FromRow)]
+pub struct Chat {
+    pub id: String,
+    pub notebook_id: String,
+    pub title: Option<String>,
+    pub model_id: Option<String>,
+    pub provider: Option<String>,
+    pub created_at: i64,
+}
+
+/// A persisted chat message. `citations_json` holds a serialized
+/// `Vec<Citation>` (see `Citation` below) on assistant messages; user
+/// messages leave it null.
+#[derive(Debug, Clone, Serialize, Deserialize, Type, FromRow)]
+pub struct Message {
+    pub id: String,
+    pub chat_id: String,
+    pub role: MessageRole,
+    pub content: String,
+    pub citations_json: Option<String>,
+    pub created_at: i64,
+}
+
+/// Inline citation pointing back at a chunk + its source document. Rendered
+/// as a clickable pill in chat answers.
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+pub struct Citation {
+    pub chunk_id: i64,
+    pub document_id: String,
+    pub document_filename: String,
+    pub page: i64,
+}
