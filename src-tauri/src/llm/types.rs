@@ -133,3 +133,42 @@ impl From<ProviderId> for ProviderInfo {
         }
     }
 }
+
+/// Author of a single message in a chat-style request to a provider. Maps
+/// directly to Anthropic / OpenAI / Google chat message roles.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Type)]
+#[serde(rename_all = "lowercase")]
+pub enum ChatRole {
+    System,
+    User,
+    Assistant,
+}
+
+/// One message in a chat conversation sent to the provider.
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+pub struct ChatMessage {
+    pub role: ChatRole,
+    pub content: String,
+}
+
+/// Provider-agnostic chat request. The system prompt is separated from the
+/// user/assistant turn list because Anthropic places it on a top-level
+/// `system` field rather than inside `messages`.
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+pub struct ChatRequest {
+    pub model: String,
+    pub system: Option<String>,
+    pub messages: Vec<ChatMessage>,
+    pub max_tokens: Option<u32>,
+    pub temperature: Option<f32>,
+}
+
+/// One unit emitted by `chat_stream`. UIs render `Delta` chunks as they
+/// arrive, then a single `Done` (or `Error`) terminator.
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+#[serde(tag = "kind", content = "data")]
+pub enum ChatChunk {
+    Delta { text: String },
+    Done,
+    Error { message: String },
+}
