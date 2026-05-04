@@ -10,15 +10,21 @@ pub mod openai;
 pub mod openrouter;
 pub mod types;
 
-pub use types::{Capabilities, ModelInfo, ProviderId, ProviderInfo, ProviderStatus};
+pub use types::{
+    Capabilities, ChatChunk, ChatMessage, ChatRequest, ChatRole, ModelInfo, ProviderId,
+    ProviderInfo, ProviderStatus,
+};
+
+use std::pin::Pin;
 
 use async_trait::async_trait;
+use futures_util::Stream;
 
 use crate::error::AppResult;
 
-/// Common surface for every provider. Phase 1 only needs `ping` (which
-/// doubles as `list_models`); chat streaming and tool use land in later
-/// phases behind the same trait.
+pub type ChatStream = Pin<Box<dyn Stream<Item = ChatChunk> + Send>>;
+
+/// Common surface for every provider.
 #[async_trait]
 pub trait LlmProvider: Send + Sync {
     fn id(&self) -> ProviderId;
@@ -29,6 +35,19 @@ pub trait LlmProvider: Send + Sync {
     /// (typically `GET /models`). Returns the available model list on
     /// success.
     async fn ping(&self) -> AppResult<ProviderStatus>;
+
+    /// Stream an assistant reply for the given chat request. The default
+    /// impl returns a single `Error` chunk so providers without streaming
+    /// support surface the right UX without panicking.
+    async fn chat_stream(&self, _req: ChatRequest) -> AppResult<ChatStream> {
+        let provider = self.id().label();
+        let stream = async_stream::stream! {
+            yield ChatChunk::Error {
+                message: format!("{provider} chat is not implemented yet"),
+            };
+        };
+        Ok(Box::pin(stream))
+    }
 }
 
 /// Construct a provider client from its id and (optional) API key. Ollama
