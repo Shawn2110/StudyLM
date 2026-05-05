@@ -29,6 +29,10 @@ pub fn commands_builder() -> tauri_specta::Builder<tauri::Wry> {
         commands::provider::delete_provider_key,
         commands::provider::set_active_provider,
         commands::provider::get_active_provider,
+        commands::chat::list_chats,
+        commands::chat::create_chat,
+        commands::chat::list_messages,
+        commands::chat::send_chat_message,
     ])
 }
 
