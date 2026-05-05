@@ -3,6 +3,7 @@
 //! config). Handlers delegate to `db`, `ingestion`, `generation`, etc.—they
 //! never contain business logic themselves.
 
+pub mod chat;
 pub mod document;
 pub mod notebook;
 pub mod provider;
