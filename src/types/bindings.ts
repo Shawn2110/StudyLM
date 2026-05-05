@@ -30,10 +30,33 @@ export const commands = {
 	deleteProviderKey: (provider: ProviderId) => typedError<null, AppError>(__TAURI_INVOKE("delete_provider_key", { provider })),
 	setActiveProvider: (provider: "anthropic" | "openai" | "google" | "openrouter" | "ollama" | null) => typedError<null, AppError>(__TAURI_INVOKE("set_active_provider", { provider })),
 	getActiveProvider: () => typedError<"anthropic" | "openai" | "google" | "openrouter" | "ollama" | null, AppError>(__TAURI_INVOKE("get_active_provider")),
+	listChats: (notebookId: string) => typedError<Chat[], AppError>(__TAURI_INVOKE("list_chats", { notebookId })),
+	createChat: (notebookId: string) => typedError<Chat, AppError>(__TAURI_INVOKE("create_chat", { notebookId })),
+	listMessages: (chatId: string) => typedError<Message[], AppError>(__TAURI_INVOKE("list_messages", { chatId })),
+	/**
+	 *  Send a user message and kick off the assistant reply. The command
+	 *  returns the assistant message id immediately; deltas + the final
+	 *  message arrive on the `chat-stream` event.
+	 */
+	sendChatMessage: (chatId: string, userText: string, modelId: string) => typedError<string, AppError>(__TAURI_INVOKE("send_chat_message", { chatId, userText, modelId })),
 };
 
 /* Types */
 export type AppError = { kind: "Db"; message: string } | { kind: "Keychain"; message: string } | { kind: "Migration"; message: string } | { kind: "NotFound" } | { kind: "InvalidInput"; message: string } | { kind: "Io"; message: string } | { kind: "Internal"; message: string };
+
+/**
+ *  A persisted chat session inside a notebook. `model_id` and `provider`
+ *  snapshot which LLM was used for the first assistant reply — useful for
+ *  later regeneration and for badge rendering on the message bubble.
+ */
+export type Chat = {
+	id: string,
+	notebook_id: string,
+	title: string | null,
+	model_id: string | null,
+	provider: string | null,
+	created_at: number,
+};
 
 // Emphasis for flashcards, guide tone, and worked-example selection.
 export type DifficultyFocus = "conceptual" | "problem_solving" | "memorization" | "mixed";
@@ -70,6 +93,23 @@ export type ExamType = "internal" | "midsem" | "endsem" | "viva" | "practical" |
 
 // Question/answer shape the student will face in the exam.
 export type Format = "mcq" | "short" | "long" | "oral" | "numerical" | "mixed";
+
+/**
+ *  A persisted chat message. `citations_json` holds a serialized
+ *  `Vec<Citation>` (see `Citation` below) on assistant messages; user
+ *  messages leave it null.
+ */
+export type Message = {
+	id: string,
+	chat_id: string,
+	role: MessageRole,
+	content: string,
+	citations_json: string | null,
+	created_at: number,
+};
+
+// Author of a chat message.
+export type MessageRole = "user" | "assistant";
 
 /**
  *  A single model exposed by a provider. `id` is the provider-native
