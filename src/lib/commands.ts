@@ -1,7 +1,9 @@
 import {
   commands,
   type AppError,
+  type Chat,
   type Document,
+  type Message,
   type Notebook,
   type PrepMode,
   type ProviderId,
@@ -74,4 +76,24 @@ export async function setActiveProvider(
 
 export async function getActiveProvider(): Promise<ProviderId | null> {
   return unwrap(commands.getActiveProvider());
+}
+
+export async function listChats(notebookId: string): Promise<Chat[]> {
+  return unwrap(commands.listChats(notebookId));
+}
+
+export async function createChat(notebookId: string): Promise<Chat> {
+  return unwrap(commands.createChat(notebookId));
+}
+
+export async function listMessages(chatId: string): Promise<Message[]> {
+  return unwrap(commands.listMessages(chatId));
+}
+
+export async function sendChatMessage(
+  chatId: string,
+  userText: string,
+  modelId: string,
+): Promise<string> {
+  return unwrap(commands.sendChatMessage(chatId, userText, modelId));
 }
