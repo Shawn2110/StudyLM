@@ -84,6 +84,7 @@ function NotebookDetail() {
 
 function SourcesTab({ notebookId }: { notebookId: string }) {
   const queryClient = useQueryClient();
+  const [pickerError, setPickerError] = useState<string | null>(null);
 
   const { data: documents, isLoading, error } = useQuery({
     queryKey: ["documents", notebookId],
@@ -113,12 +114,22 @@ function SourcesTab({ notebookId }: { notebookId: string }) {
   }, [queryClient, notebookId]);
 
   async function handleAddPdf() {
-    const picked = await open({
-      filters: [{ name: "PDF", extensions: ["pdf"] }],
-      multiple: false,
-    });
-    if (typeof picked === "string") {
-      ingest.mutate(picked);
+    try {
+      const picked = await open({
+        filters: [{ name: "PDF", extensions: ["pdf"] }],
+        multiple: false,
+        // We run inside WSL Ubuntu, so the picker's "Home" is Linux home.
+        // Land the user in their Windows user folder so their PDFs are
+        // immediately visible. Navigation away still works.
+        defaultPath: "/mnt/c/Users/Asus",
+      });
+      if (typeof picked === "string") {
+        ingest.mutate(picked);
+      } else if (picked != null) {
+        setPickerError(`Picker returned: ${JSON.stringify(picked)}`);
+      }
+    } catch (e) {
+      setPickerError(String((e as { message?: string })?.message ?? e));
     }
   }
 
@@ -157,6 +168,13 @@ function SourcesTab({ notebookId }: { notebookId: string }) {
             (ingest.error as { message?: string })?.message ?? ingest.error,
           )}
         </p>
+      )}
+
+      {pickerError && (
+        <div className="rounded-lg border border-danger/40 bg-danger/10 p-3 text-sm text-danger">
+          <p className="font-medium">File picker failed:</p>
+          <p className="mt-1 break-words font-mono text-xs">{pickerError}</p>
+        </div>
       )}
 
       {!isLoading && documents && documents.length === 0 && (

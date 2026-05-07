@@ -1,5 +1,13 @@
-//! `nomic-embed-text-v1.5` via Candle, CPU-only. 768-d embeddings, mean-pooled
-//! over attention-masked tokens with L2 normalization (nomic convention).
+//! Local 768-d sentence embedder running on CPU via Candle's stock
+//! `BertModel`. Mean-pools attention-masked token states, then L2
+//! normalizes — the convention shared by sentence-transformers, BGE, E5.
+//!
+//! We use `BAAI/bge-base-en-v1.5` rather than `nomic-embed-text-v1.5`
+//! because nomic ships a custom `NomicBertModel` (SwiGLU activation,
+//! among other things) that Candle's stock BERT does not implement.
+//! BGE is true BERT and slots in cleanly while keeping the 768-d vector
+//! shape we wired into the chunk_vec table.
+//!
 //! Model + tokenizer + config are downloaded from the HuggingFace Hub on
 //! first use and cached under `~/.cache/huggingface/hub/`.
 
@@ -11,8 +19,9 @@ use tokenizers::{PaddingParams, Tokenizer};
 
 use crate::error::{AppError, AppResult};
 
-/// HuggingFace repo slug for the nomic embedder used across the app.
-const REPO: &str = "nomic-ai/nomic-embed-text-v1.5";
+/// HuggingFace repo slug for the local embedder used across the app.
+/// Keep at a Candle-compatible BERT model with 768-d output.
+const REPO: &str = "BAAI/bge-base-en-v1.5";
 
 pub struct NomicEmbedder {
     model: BertModel,
@@ -45,7 +54,7 @@ impl NomicEmbedder {
         };
         let model = BertModel::load(vb, &config).map_err(into_app)?;
 
-        tracing::info!(repo = REPO, "nomic embedder ready");
+        tracing::info!(repo = REPO, "local embedder ready");
         Ok(Self {
             model,
             tokenizer,
